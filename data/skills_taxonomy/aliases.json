@@ -1,0 +1,19 @@
+{
+  "python": ["python3", "py"],
+  "sql": ["structured query language"],
+  "power bi": ["powerbi", "power-bi"],
+  "scikit-learn": ["sklearn", "scikit learn"],
+  "xgboost": ["xgb", "xg boost"],
+  "lightgbm": ["light gbm"],
+  "tensorflow": ["tf"],
+  "pytorch": ["torch"],
+  "postgresql": ["postgres", "postgre sql"],
+  "ms sql server": ["sql server", "mssql"],
+  "rest api": ["rest apis", "restful api", "restful apis"],
+  "fastapi": ["fast api"],
+  "ci/cd": ["cicd", "ci cd", "continuous integration", "continuous delivery"],
+  "machine learning": ["ml"],
+  "deep learning": ["dl"],
+  "natural language processing": ["nlp"],
+  "named entity recognition": ["ner"]
+}
