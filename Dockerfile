@@ -1,28 +1,27 @@
 FROM python:3.10-slim
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1 \
-    HF_HOME=/opt/huggingface
-
 WORKDIR /app
 
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
+
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# Install CPU PyTorch from PyPI
 RUN pip install --default-timeout=300 --retries 10 \
-    torch --index-url https://download.pytorch.org/whl/cpu
+    torch==2.14.0
 
 COPY requirements.txt .
-RUN pip install --default-timeout=300 --retries 10 -r requirements.txt
 
-COPY src ./src
-COPY app ./app
-COPY data ./data
-COPY README.md .
+RUN pip install --default-timeout=300 --retries 10 \
+    -r requirements.txt
 
+COPY . .
+
+# Pre-download Sentence Transformer model
 RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
 
-RUN useradd --create-home --uid 10001 appuser && chown -R appuser:appuser /app /opt/huggingface
-USER appuser
+EXPOSE 8080
 
-EXPOSE 8000
-HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')"
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8080}"]
